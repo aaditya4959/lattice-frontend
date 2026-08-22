@@ -1,0 +1,86 @@
+<!-- @dsCard group="Presence" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Presence avatar stack</title>
+<style>
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --border: oklch(0.922 0 0);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: oklch(0.145 0 0);
+      --foreground: oklch(0.985 0 0);
+      --popover: oklch(0.205 0 0);
+      --popover-foreground: oklch(0.985 0 0);
+      --muted: oklch(0.269 0 0);
+      --muted-foreground: oklch(0.708 0 0);
+      --border: oklch(1 0 0 / 10%);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  h2 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted-foreground); margin: 0 0 0.75rem; }
+  .stack { display: flex; }
+  .avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 0 0 2px var(--background);
+    margin-left: -0.5rem;
+  }
+  .avatar:first-child { margin-left: 0; }
+  .avatar.count { background: var(--muted); color: var(--muted-foreground); }
+  .popover {
+    margin-top: 0.75rem;
+    width: 14rem;
+    background: var(--popover);
+    color: var(--popover-foreground);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    padding: 0.5rem;
+  }
+  .popover-label { font-size: 0.75rem; font-weight: 500; color: var(--muted-foreground); padding: 0 0.5rem 0.375rem; }
+  .row { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.875rem; border-radius: 0.375rem; }
+  .dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; flex-shrink: 0; }
+  .you { font-size: 0.75rem; color: var(--muted-foreground); }
+</style>
+</head>
+<body>
+  <h2>Avatar stack (trigger)</h2>
+  <div class="stack">
+    <div class="avatar" style="background:#2563eb">AB</div>
+    <div class="avatar" style="background:#16a34a">CD</div>
+    <div class="avatar" style="background:#d97706">EF</div>
+    <div class="avatar count">+2</div>
+  </div>
+
+  <h2 style="margin-top:2rem">Popover (open state)</h2>
+  <div class="popover">
+    <p class="popover-label">Viewing this document</p>
+    <div class="row"><span class="dot" style="background:#2563eb"></span><span>aaditya@example.com</span><span class="you">(you)</span></div>
+    <div class="row"><span class="dot" style="background:#16a34a"></span><span>collaborator@example.com</span></div>
+    <div class="row"><span class="dot" style="background:#d97706"></span><span>reviewer@example.com</span></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!-- @dsCard group="Documents" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Doc card</title>
+<style>
+  :root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --border: oklch(0.922 0 0);
+    --radius: 0.625rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: oklch(0.145 0 0);
+      --foreground: oklch(0.985 0 0);
+      --card: oklch(0.205 0 0);
+      --card-foreground: oklch(0.985 0 0);
+      --secondary: oklch(0.269 0 0);
+      --secondary-foreground: oklch(0.985 0 0);
+      --primary: oklch(0.922 0 0);
+      --primary-foreground: oklch(0.205 0 0);
+      --muted-foreground: oklch(0.708 0 0);
+      --border: oklch(1 0 0 / 10%);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; max-width: 700px; }
+  .card {
+    position: relative;
+    background: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+  .menu-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--muted-foreground);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .title { font-weight: 600; font-size: 0.95rem; padding-right: 1.5rem; margin: 0 0 0.5rem; }
+  .meta { display: flex; align-items: center; gap: 0.5rem; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+  }
+  .badge-owner { background: var(--primary); color: var(--primary-foreground); }
+  .badge-shared { background: var(--secondary); color: var(--secondary-foreground); }
+  .updated { font-size: 0.75rem; color: var(--muted-foreground); }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="card">
+      <button class="menu-btn">⋮</button>
+      <p class="title">Q3 planning notes</p>
+      <div class="meta">
+        <span class="badge badge-owner">Owner</span>
+        <span class="updated">Updated 2h ago</span>
+      </div>
+    </div>
+    <div class="card">
+      <button class="menu-btn">⋮</button>
+      <p class="title">Design review</p>
+      <div class="meta">
+        <span class="badge badge-shared">Shared with you</span>
+        <span class="updated">Updated yesterday</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
