@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as Y from 'yjs';
 import { useAuth } from '@/lib/auth-context';
 import { base64ToUint8Array, uint8ArrayToBase64 } from '@/lib/yjs-codec';
@@ -131,14 +131,13 @@ export function useCollaborativeDoc(docId: string | undefined): CollaborativeDoc
     };
   }, [docId, token, doc]);
 
-  return {
-    doc,
-    status,
-    errorCode,
-    send: (message) => sendRef.current(message),
-    subscribe: (handler) => {
-      listenersRef.current.add(handler);
-      return () => listenersRef.current.delete(handler);
-    },
-  };
+  // Stable identities (refs only) so consumers like usePresence can depend on
+  // send/subscribe without resubscribing on every render.
+  const send = useCallback((message: ClientMessage) => sendRef.current(message), []);
+  const subscribe = useCallback((handler: (message: ServerMessage) => void) => {
+    listenersRef.current.add(handler);
+    return () => listenersRef.current.delete(handler);
+  }, []);
+
+  return { doc, status, errorCode, send, subscribe };
 }

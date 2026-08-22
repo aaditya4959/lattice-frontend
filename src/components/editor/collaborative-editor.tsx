@@ -8,9 +8,11 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/lib/auth-context';
 import { useCollaborativeDoc, type ConnectionStatus } from '@/lib/hooks/use-collaborative-doc';
+import { usePresence } from '@/lib/hooks/use-presence';
 import { useNow } from '@/lib/hooks/use-now';
 import { formatRelativeTime } from '@/lib/format';
 import { LATTICE_TEXT_KEY } from '@/lib/yjs-codec';
+import { PresenceBar } from './presence-bar';
 
 // Quill touches the DOM at construction time — keep it out of the server render.
 const QuillEditor = dynamic(() => import('./quill-editor').then((mod) => mod.QuillEditor), {
@@ -39,10 +41,11 @@ export function CollaborativeEditor({
   latestSnapshotAt: string | null | undefined;
 }) {
   const router = useRouter();
-  const { logout } = useAuth();
-  const { doc, status, errorCode } = useCollaborativeDoc(docId);
+  const { user, logout } = useAuth();
+  const { doc, status, errorCode, send, subscribe } = useCollaborativeDoc(docId);
   const ytext = useMemo(() => doc.getText(LATTICE_TEXT_KEY), [doc]);
   const now = useNow(30_000);
+  const { roster, remoteCursors, sendCursor } = usePresence(subscribe, send, docId, user?.sub);
 
   useEffect(() => {
     if (status !== 'error' || !errorCode) return;
@@ -59,13 +62,16 @@ export function CollaborativeEditor({
 
   return (
     <div className="flex flex-1 flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <Badge variant={STATUS_VARIANT[status]}>{STATUS_LABEL[status]}</Badge>
-        <span className="text-muted-foreground text-xs">
-          {latestSnapshotAt ? `Saved ${formatRelativeTime(latestSnapshotAt, now)}` : 'Not saved yet'}
-        </span>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Badge variant={STATUS_VARIANT[status]}>{STATUS_LABEL[status]}</Badge>
+          <span className="text-muted-foreground text-xs">
+            {latestSnapshotAt ? `Saved ${formatRelativeTime(latestSnapshotAt, now)}` : 'Not saved yet'}
+          </span>
+        </div>
+        <PresenceBar users={roster} />
       </div>
-      <QuillEditor ytext={ytext} />
+      <QuillEditor ytext={ytext} remoteCursors={remoteCursors} onSelectionChange={sendCursor} />
     </div>
   );
 }
