@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { useAuth } from '@/lib/auth-context';
-import type { CollaboratorRecord, DocRecord } from '@/lib/types';
+import type { CollaboratorRecord, DocDetail, DocRecord } from '@/lib/types';
 
 const docsKey = ['docs'] as const;
 
@@ -13,6 +13,16 @@ export function useDocsQuery() {
     queryKey: docsKey,
     queryFn: () => apiFetch<DocRecord[]>('/docs', { token }),
     enabled: !!token,
+  });
+}
+
+export function useDocQuery(docId: string | undefined) {
+  const { token } = useAuth();
+  return useQuery({
+    queryKey: [...docsKey, docId],
+    queryFn: () => apiFetch<DocDetail>(`/docs/${docId}`, { token }),
+    enabled: !!token && !!docId,
+    retry: false,
   });
 }
 

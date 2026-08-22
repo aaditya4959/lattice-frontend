@@ -1,19 +1,52 @@
-import { AuthGuard } from '@/components/auth-guard';
+'use client';
 
-export default async function DocEditorPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+import { use, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
+
+import { AuthGuard } from '@/components/auth-guard';
+import { CollaborativeEditor } from '@/components/editor/collaborative-editor';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useDocQuery } from '@/lib/hooks/use-docs';
+
+function DocEditorContent({ docId }: { docId: string }) {
+  const router = useRouter();
+  const { data: doc, isLoading, isError } = useDocQuery(docId);
+
+  useEffect(() => {
+    if (isError) router.replace('/dashboard');
+  }, [isError, router]);
+
+  if (isError) return null;
+
+  return (
+    <main className="flex flex-1 flex-col gap-4 p-6">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href="/dashboard" aria-label="Back to dashboard">
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        {isLoading ? (
+          <Skeleton className="h-6 w-48" />
+        ) : (
+          <h1 className="truncate text-lg font-semibold">{doc?.title}</h1>
+        )}
+      </div>
+
+      <CollaborativeEditor docId={docId} />
+    </main>
+  );
+}
+
+export default function DocEditorPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
 
   return (
     <AuthGuard>
-      <main className="flex flex-1 flex-col p-6">
-        <p className="text-muted-foreground text-sm">
-          Collaborative editor for doc {id} — built in LAT-E10/E11/E12.
-        </p>
-      </main>
+      <DocEditorContent docId={id} />
     </AuthGuard>
   );
 }
