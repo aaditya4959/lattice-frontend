@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as Y from 'yjs';
 import { useAuth } from '@/lib/auth-context';
+import { WS_URL } from '@/lib/env';
 import { base64ToUint8Array, uint8ArrayToBase64 } from '@/lib/yjs-codec';
 import type { ClientMessage, ServerMessage } from '@/lib/types';
 
 export type ConnectionStatus = 'connecting' | 'connected' | 'reconnecting' | 'error';
 
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL ?? 'ws://localhost:3000/sync';
 const MAX_BACKOFF_MS = 10_000;
 
 // Tag applied to Yjs transactions built from server messages, so the local

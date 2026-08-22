@@ -7,6 +7,7 @@ import './quill-editor.css';
 import { QuillBinding } from 'y-quill';
 import type * as Y from 'yjs';
 import { markdownShortcutBindings } from './markdown-shortcuts';
+import { labelToolbarButtons } from './toolbar-labels';
 import type { RemoteCursor } from '@/lib/hooks/use-presence';
 
 const TOOLBAR_OPTIONS = [
@@ -69,6 +70,7 @@ export function QuillEditor({ ytext, remoteCursors, onSelectionChange }: QuillEd
       },
     });
     quillRef.current = quill;
+    labelToolbarButtons(quill.container);
 
     const binding = new QuillBinding(ytext, quill);
 
