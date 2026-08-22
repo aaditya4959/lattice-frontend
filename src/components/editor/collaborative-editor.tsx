@@ -62,8 +62,8 @@ export function CollaborativeEditor({
 
   return (
     <div className="flex flex-1 flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+        <div className="flex flex-wrap items-center gap-2">
           <Badge variant={STATUS_VARIANT[status]}>{STATUS_LABEL[status]}</Badge>
           <span className="text-muted-foreground text-xs">
             {latestSnapshotAt ? `Saved ${formatRelativeTime(latestSnapshotAt, now)}` : 'Not saved yet'}

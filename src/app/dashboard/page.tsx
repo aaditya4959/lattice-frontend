@@ -1,29 +1,24 @@
 'use client';
 
 import { AuthGuard } from '@/components/auth-guard';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AccountMenu } from '@/components/account-menu';
 import { CreateDocDialog } from '@/components/create-doc-dialog';
 import { DocCard } from '@/components/doc-card';
 import { useAuth } from '@/lib/auth-context';
 import { useDocsQuery } from '@/lib/hooks/use-docs';
 
 function DashboardContent() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { data: docs, isLoading, isError } = useDocsQuery();
 
   return (
     <main className="flex flex-1 flex-col gap-6 p-6">
       <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold">Your documents</h1>
-          <p className="text-muted-foreground text-sm">Signed in as {user?.email}</p>
-        </div>
-        <div className="flex items-center gap-2">
+        <h1 className="min-w-0 truncate text-xl font-semibold">Your documents</h1>
+        <div className="flex shrink-0 items-center gap-3">
           <CreateDocDialog />
-          <Button variant="outline" size="sm" onClick={logout}>
-            Log out
-          </Button>
+          <AccountMenu />
         </div>
       </div>
 

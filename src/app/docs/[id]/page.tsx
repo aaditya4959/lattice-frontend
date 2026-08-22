@@ -23,8 +23,8 @@ function DocEditorContent({ docId }: { docId: string }) {
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-6">
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" asChild>
+      <div className="flex min-w-0 items-center gap-3">
+        <Button variant="ghost" size="icon" className="shrink-0" asChild>
           <Link href="/dashboard" aria-label="Back to dashboard">
             <ArrowLeft className="h-4 w-4" />
           </Link>
@@ -32,7 +32,7 @@ function DocEditorContent({ docId }: { docId: string }) {
         {isLoading ? (
           <Skeleton className="h-6 w-48" />
         ) : (
-          <h1 className="truncate text-lg font-semibold">{doc?.title}</h1>
+          <h1 className="min-w-0 truncate text-lg font-semibold">{doc?.title}</h1>
         )}
       </div>
 
