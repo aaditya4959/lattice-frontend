@@ -23,6 +23,9 @@ export function useDocQuery(docId: string | undefined) {
     queryFn: () => apiFetch<DocDetail>(`/docs/${docId}`, { token }),
     enabled: !!token && !!docId,
     retry: false,
+    // latestSnapshotAt only moves when the backend's periodic snapshot job runs,
+    // not on every keystroke — poll rather than relying on a WS push that doesn't exist.
+    refetchInterval: 30_000,
   });
 }
 

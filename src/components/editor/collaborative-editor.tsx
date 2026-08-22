@@ -8,6 +8,8 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/lib/auth-context';
 import { useCollaborativeDoc, type ConnectionStatus } from '@/lib/hooks/use-collaborative-doc';
+import { useNow } from '@/lib/hooks/use-now';
+import { formatRelativeTime } from '@/lib/format';
 import { LATTICE_TEXT_KEY } from '@/lib/yjs-codec';
 
 // Quill touches the DOM at construction time — keep it out of the server render.
@@ -29,11 +31,18 @@ const STATUS_VARIANT: Record<ConnectionStatus, 'default' | 'secondary' | 'destru
   error: 'destructive',
 };
 
-export function CollaborativeEditor({ docId }: { docId: string }) {
+export function CollaborativeEditor({
+  docId,
+  latestSnapshotAt,
+}: {
+  docId: string;
+  latestSnapshotAt: string | null | undefined;
+}) {
   const router = useRouter();
   const { logout } = useAuth();
   const { doc, status, errorCode } = useCollaborativeDoc(docId);
   const ytext = useMemo(() => doc.getText(LATTICE_TEXT_KEY), [doc]);
+  const now = useNow(30_000);
 
   useEffect(() => {
     if (status !== 'error' || !errorCode) return;
@@ -50,8 +59,11 @@ export function CollaborativeEditor({ docId }: { docId: string }) {
 
   return (
     <div className="flex flex-1 flex-col gap-3">
-      <div>
+      <div className="flex items-center gap-2">
         <Badge variant={STATUS_VARIANT[status]}>{STATUS_LABEL[status]}</Badge>
+        <span className="text-muted-foreground text-xs">
+          {latestSnapshotAt ? `Saved ${formatRelativeTime(latestSnapshotAt, now)}` : 'Not saved yet'}
+        </span>
       </div>
       <QuillEditor ytext={ytext} />
     </div>

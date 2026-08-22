@@ -36,7 +36,7 @@ function DocEditorContent({ docId }: { docId: string }) {
         )}
       </div>
 
-      <CollaborativeEditor docId={docId} />
+      <CollaborativeEditor docId={docId} latestSnapshotAt={doc?.latestSnapshotAt} />
     </main>
   );
 }

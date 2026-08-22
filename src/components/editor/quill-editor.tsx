@@ -2,11 +2,12 @@
 
 import { useEffect, useRef } from 'react';
 import Quill from 'quill';
-import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
+import './quill-editor.css';
 import { QuillBinding } from 'y-quill';
 import type * as Y from 'yjs';
+import { markdownShortcutBindings } from './markdown-shortcuts';
 
-// Baseline toolbar for LAT-E10 (core wiring) — theming/UX polish is LAT-E11.
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, false] }],
   ['bold', 'italic', 'underline', 'strike'],
@@ -23,9 +24,17 @@ export function QuillEditor({ ytext }: { ytext: Y.Text }) {
     const container = containerRef.current;
     if (!container) return;
 
+    // Bubble theme = a floating selection toolbar (closer to Notion's inline
+    // toolbar) instead of a fixed top bar. Block-level formatting on an empty
+    // line (no selection to trigger the bubble) comes from the "# "/"- "/"1. "
+    // typing shortcuts below instead.
     const quill = new Quill(container, {
-      theme: 'snow',
-      modules: { toolbar: TOOLBAR_OPTIONS },
+      theme: 'bubble',
+      placeholder: 'Start writing…',
+      modules: {
+        toolbar: TOOLBAR_OPTIONS,
+        keyboard: { bindings: markdownShortcutBindings },
+      },
     });
 
     // No Awareness passed — cursor position comes from the backend's own
@@ -41,7 +50,7 @@ export function QuillEditor({ ytext }: { ytext: Y.Text }) {
   return (
     <div
       ref={containerRef}
-      className="flex flex-1 flex-col [&_.ql-container]:flex-1 [&_.ql-container]:overflow-y-auto [&_.ql-editor]:min-h-[50vh]"
+      className="lattice-editor flex flex-1 flex-col [&_.ql-container]:flex-1 [&_.ql-container]:overflow-y-auto [&_.ql-editor]:min-h-[50vh]"
     />
   );
 }
